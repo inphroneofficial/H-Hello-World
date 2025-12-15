@@ -47,13 +47,14 @@ const BabyCard = () => {
     setIsDownloading(false);
   };
 
-  const details = [
-    { icon: Heart, label: "Gender", value: "Female" },
-    { icon: MapPin, label: "Birth Place", value: "Nandyal Hospital" },
-    { icon: Clock, label: "Time", value: "3:40 PM" },
-    { icon: Calendar, label: "Date", value: "15-12-2025" },
-    { icon: Scale, label: "Weight", value: "4.2 kg" },
-  ];
+const details = [
+  { icon: Heart, label: "Gender", value: "Baby Girl 👶🎀💖" },
+  { icon: MapPin, label: "Birth Place", value: "Nandyal Hospital 🏥" },
+  { icon: Clock, label: "Time", value: "3:40 PM ⏰" },
+  { icon: Calendar, label: "Date", value: "15-12-2025 📅" },
+  { icon: Scale, label: "Weight", value: "4.2 kg ⚖️" },
+];
+
 
   return (
     <motion.div
@@ -88,18 +89,22 @@ const BabyCard = () => {
 
         <div className="p-6">
   {/* Header */}
-  <div className="text-center mb-4">
-    <p className="text-[10px] tracking-widest text-muted-foreground uppercase">
-      Welcome
-    </p>
+<div className="text-center mb-4">
+  <p className="text-[10px] tracking-widest text-muted-foreground uppercase">
+    Welcome
+  </p>
 
-    <h1 className="mt-2 text-lg sm:text-xl font-display font-medium leading-relaxed">
-      ✨ Hello World, Baby Girl 👶🎀✨  
-      <span className="block text-sm sm:text-base text-muted-foreground mt-1">
-        A tiny miracle 💖, welcome to our world 🌍👧
-      </span>
-    </h1>
-  </div>
+  <h1 className="mt-2 text-lg sm:text-xl font-display font-medium leading-relaxed">
+    ✨ Hello World, Baby Girl 👶🎀✨  
+    <span className="block text-sm sm:text-base text-muted-foreground mt-1">
+      A tiny miracle 💖, welcome to our world 🌍👧
+    </span>
+    <span className="block text-xs sm:text-sm text-muted-foreground mt-1">
+       A beautiful new part of our family 💗
+    </span>
+  </h1>
+</div>
+
 
           {/* 🖼️ 3D Image Slideshow */}
           <div className="flex justify-center mb-8">
