@@ -98,7 +98,7 @@ const DeveloperModal = () => {
                   </div>
 
                   <h3 className="text-2xl font-display font-semibold mb-1">
-                    G. Thangella
+                    G.Thangella
                   </h3>
 
                   <div className="flex items-center justify-center gap-2 text-muted-foreground mb-6">
@@ -110,8 +110,7 @@ const DeveloperModal = () => {
                   </div>
 
                   <p className="text-sm font-elegant text-muted-foreground mb-8 max-w-xs mx-auto">
-                    “This application was lovingly crafted to celebrate a
-                    beautiful baby girl and a once-in-a-lifetime moment.”
+                    This application was lovingly crafted by me, her mama, to celebrate the birth of a beautiful baby girl—her entry into the world and a once-in-a-lifetime moment.
                   </p>
 
                   <div className="flex justify-center">
