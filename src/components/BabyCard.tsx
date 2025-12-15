@@ -28,7 +28,7 @@ const BabyCard = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setImageIndex((prev) => (prev + 1) % images.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
 
@@ -115,14 +115,14 @@ const BabyCard = () => {
               animate={{
                 rotateY: [0, 4, 0],
               }}
-              transition={{ duration: 6, repeat: Infinity }}
+              transition={{ duration: 7, repeat: Infinity }}
             >
               <motion.img
                 key={imageIndex}
                 src={images[imageIndex]}
                 initial={{ opacity: 0, scale: 1.05 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 1.8 }}
                 className="w-full h-full object-cover"
               />
 
