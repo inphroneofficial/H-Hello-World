@@ -52,7 +52,7 @@ const details = [
   { icon: MapPin, label: "Birth Place", value: "Nandyal Hospital 🏥" },
   { icon: Clock, label: "Time", value: "3:40 PM ⏰" },
   { icon: Calendar, label: "Date", value: "15-12-2025 📅" },
-  { icon: Scale, label: "Weight", value: "4.2 kg ⚖️" },
+  //{ icon: Scale, label: "Weight", value: "4.2 kg ⚖️" },
 ];
 
 
