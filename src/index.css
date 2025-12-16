@@ -80,34 +80,48 @@
   }
 
   .dark {
-    --background: 25 20% 8%;
-    --foreground: 30 30% 95%;
+    /* Enhanced dark mode with deeper, richer colors */
+    --background: 240 10% 6%;
+    --foreground: 350 20% 95%;
 
-    --card: 25 18% 12%;
-    --card-foreground: 30 30% 95%;
+    --card: 240 8% 10%;
+    --card-foreground: 350 20% 95%;
 
-    --popover: 25 18% 12%;
-    --popover-foreground: 30 30% 95%;
+    --popover: 240 8% 10%;
+    --popover-foreground: 350 20% 95%;
 
-    --primary: 350 45% 70%;
-    --primary-foreground: 25 20% 10%;
+    --primary: 350 55% 65%;
+    --primary-foreground: 240 10% 6%;
 
-    --secondary: 25 15% 18%;
-    --secondary-foreground: 30 30% 90%;
+    --secondary: 350 20% 15%;
+    --secondary-foreground: 350 20% 90%;
 
-    --muted: 25 15% 18%;
-    --muted-foreground: 30 20% 60%;
+    --muted: 240 8% 15%;
+    --muted-foreground: 350 15% 65%;
 
-    --accent: 38 60% 55%;
-    --accent-foreground: 30 30% 95%;
+    --accent: 38 70% 50%;
+    --accent-foreground: 350 20% 95%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 25 15% 20%;
-    --input: 25 15% 20%;
-    --ring: 350 45% 70%;
+    --border: 240 8% 18%;
+    --input: 240 8% 18%;
+    --ring: 350 55% 65%;
+
+    /* Dark mode gradients */
+    --gradient-cinematic: linear-gradient(180deg, hsl(240 10% 6%), hsl(240 12% 4%));
+    --gradient-celebration: radial-gradient(ellipse at center, hsl(350 20% 12%), hsl(240 10% 6%));
+
+    /* Enhanced shadows for dark mode */
+    --shadow-soft: 0 4px 20px -4px hsl(350 55% 65% / 0.2);
+    --shadow-glow: 0 0 40px hsl(350 55% 65% / 0.35);
+    --shadow-gold: 0 0 30px hsl(38 70% 50% / 0.4);
   }
+}
+.share-btn {
+  @apply flex items-center gap-1 px-3 py-2 rounded-full text-xs 
+  border border-border bg-card/80 backdrop-blur-sm transition;
 }
 
 @layer base {
@@ -227,6 +241,76 @@
     }
   }
 
+  @keyframes bounce-soft {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes wiggle {
+    0%, 100% {
+      transform: rotate(-3deg);
+    }
+    50% {
+      transform: rotate(3deg);
+    }
+  }
+
+  @keyframes heartbeat {
+    0%, 100% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(1.1);
+    }
+    50% {
+      transform: scale(1);
+    }
+    75% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes slide-up-fade {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes rainbow-glow {
+    0% {
+      box-shadow: 0 0 20px hsl(350 50% 65% / 0.4);
+    }
+    33% {
+      box-shadow: 0 0 25px hsl(38 70% 55% / 0.4);
+    }
+    66% {
+      box-shadow: 0 0 25px hsl(350 40% 75% / 0.4);
+    }
+    100% {
+      box-shadow: 0 0 20px hsl(350 50% 65% / 0.4);
+    }
+  }
+
   .animate-shimmer {
     background: linear-gradient(
       90deg,
@@ -252,6 +336,30 @@
 
   .animate-sparkle {
     animation: sparkle 1.5s ease-in-out infinite;
+  }
+
+  .animate-bounce-soft {
+    animation: bounce-soft 2s ease-in-out infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+
+  .animate-heartbeat {
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  .animate-twinkle {
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up-fade {
+    animation: slide-up-fade 0.6s ease-out forwards;
+  }
+
+  .animate-rainbow-glow {
+    animation: rainbow-glow 4s ease-in-out infinite;
   }
 
   @keyframes spin-slow {

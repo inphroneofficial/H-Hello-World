@@ -80,7 +80,7 @@ const CelebrationReveal = ({ onComplete }: CelebrationRevealProps) => {
       className="min-h-screen bg-gradient-celebration flex flex-col items-center justify-center px-4 relative overflow-hidden"
     >
       {/* Audio player */}
-      <AudioPlayer autoPlay />
+      <AudioPlayer />
 
       {/* Radial glow background */}
       <div className="absolute inset-0 pointer-events-none">

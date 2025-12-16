@@ -1,143 +1,131 @@
 import { motion } from "framer-motion";
+import html2canvas from "html2canvas";
 import {
   Share2,
   MessageCircle,
   Image as ImageIcon,
-  Instagram,
+  Copy,
 } from "lucide-react";
-import html2canvas from "html2canvas";
 
 interface ShareButtonsProps {
-  cardRef: React.RefObject<HTMLDivElement>;
+  targetRef: React.RefObject<HTMLDivElement>;
 }
 
-const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
-  const shareText = `👶💖✨ We are blessed with a beautiful baby girl!
+const shareText = `🎀 We're blessed with a baby girl! ✨
 
-Born on 15 December 2025 at 3:40 PM
-Nandyal Hospital 🏥
+📍 Birth Place: Nandyal Hospital
+📅 Date: 15-12-2025
+⏰ Time: 3:40 PM
 
-A Memorable Moment 🌸🕊️`;
+👨 Father: Hussainaiah
+👩 Mother: Habeeb Hunnisa
 
-  /* ---------------- MESSAGE ONLY ---------------- */
+💕 Welcome to our little angel!`;
 
-  const shareMessageWhatsApp = () => {
-    window.open(
-      `https://wa.me/?text=${encodeURIComponent(shareText)}`,
-      "_blank"
-    );
-  };
+const ShareButtons = ({ targetRef }: ShareButtonsProps) => {
+  /* Capture card as FILE (not download) */
+  const captureImageFile = async (): Promise<File | null> => {
+    if (!targetRef.current) return null;
 
-  const shareMessageInstagram = () => {
-    alert(
-      "Instagram does not support direct message sharing from browser.\nMessage copied to clipboard."
-    );
-    navigator.clipboard.writeText(shareText);
-  };
-
-  /* ---------------- IMAGE SHARE ---------------- */
-
-  const createImageFile = async (): Promise<File | null> => {
-    if (!cardRef.current) return null;
-
-    const canvas = await html2canvas(cardRef.current, {
+    const canvas = await html2canvas(targetRef.current, {
       scale: 2,
-      backgroundColor: null,
       useCORS: true,
+      backgroundColor: null,
     });
 
     return new Promise((resolve) => {
       canvas.toBlob((blob) => {
         if (!blob) return resolve(null);
-        resolve(
-          new File([blob], "baby-announcement.png", { type: "image/png" })
-        );
+        resolve(new File([blob], "baby-announcement.png", { type: "image/png" }));
       });
     });
   };
 
-  const shareImage = async () => {
-    const file = await createImageFile();
-    if (!file) return;
-
-    // ✅ Mobile share (best experience)
-    if (navigator.share && navigator.canShare?.({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        text: shareText,
-      });
-      return;
-    }
-
-    // ❌ Desktop fallback
-    const url = URL.createObjectURL(file);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = file.name;
-    a.click();
-
-    window.open(
-      `https://wa.me/?text=${encodeURIComponent(shareText)}`,
-      "_blank"
-    );
+  /* 🟢 WhatsApp Message */
+  const waMessage = () => {
+    const encoded = encodeURIComponent(shareText);
+    window.open(`https://wa.me/?text=${encoded}`, "_blank");
   };
 
-  const buttons = [
-    {
-      label: "WhatsApp Message",
-      icon: MessageCircle,
-      onClick: shareMessageWhatsApp,
-      color: "hover:bg-green-500/10 hover:text-green-600",
-    },
-    {
-      label: "WhatsApp Image",
-      icon: ImageIcon,
-      onClick: shareImage,
-      color: "hover:bg-green-500/10 hover:text-green-600",
-    },
-    {
-      label: "Instagram Message",
-      icon: Instagram,
-      onClick: shareMessageInstagram,
-      color:
-        "hover:bg-gradient-to-r hover:from-pink-500/10 hover:via-purple-500/10 hover:to-orange-500/10 hover:text-pink-600",
-    },
-    {
-      label: "Instagram Image",
-      icon: ImageIcon,
-      onClick: shareImage,
-      color:
-        "hover:bg-gradient-to-r hover:from-pink-500/10 hover:via-purple-500/10 hover:to-orange-500/10 hover:text-pink-600",
-    },
-  ];
+  /* 🟢 WhatsApp / 🟣 Instagram Image */
+  const shareImage = async () => {
+    const file = await captureImageFile();
+    if (!file) return;
+
+    if (navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: "Baby Announcement",
+        text: shareText,
+      });
+    } else {
+      alert("Image sharing works only on mobile browsers.");
+    }
+  };
+
+  /* 🟣 Instagram Message (Copy only – limitation) */
+  const instaMessage = async () => {
+    await navigator.clipboard.writeText(shareText);
+    alert("Message copied. Paste it in Instagram caption or story.");
+    window.open("https://www.instagram.com/", "_blank");
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1.6 }}
-      className="flex flex-col items-center gap-3"
+      transition={{ delay: 1.5 }}
+      className="space-y-4"
     >
       <div className="flex items-center gap-1 text-muted-foreground">
         <Share2 className="w-4 h-4" />
-        <span className="text-xs font-elegant tracking-wider uppercase">
-          Share
-        </span>
+        <span className="text-xs uppercase tracking-wider">Share</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        {buttons.map((btn) => (
-          <motion.button
-            key={btn.label}
-            onClick={btn.onClick}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`px-4 py-2 rounded-xl bg-card/80 border border-border/50 flex items-center gap-2 text-sm transition-all ${btn.color}`}
-          >
-            <btn.icon className="w-4 h-4" />
-            {btn.label}
-          </motion.button>
-        ))}
+      {/* WhatsApp */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-medium text-green-600 w-20">
+          WhatsApp
+        </span>
+
+        <motion.button
+          onClick={waMessage}
+          whileHover={{ scale: 1.1 }}
+          className="share-btn text-green-600"
+        >
+          <MessageCircle className="w-4 h-4" /> Message
+        </motion.button>
+
+        <motion.button
+          onClick={shareImage}
+          whileHover={{ scale: 1.1 }}
+          className="share-btn text-green-600"
+        >
+          <ImageIcon className="w-4 h-4" /> Image
+        </motion.button>
+      </div>
+
+      {/* Instagram */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-medium text-pink-600 w-20">
+          Instagram
+        </span>
+
+        <motion.button
+          onClick={shareImage}
+          whileHover={{ scale: 1.1 }}
+          className="share-btn text-pink-600"
+        >
+          <ImageIcon className="w-4 h-4" /> Image
+        </motion.button>
+
+        <motion.button
+          onClick={instaMessage}
+          whileHover={{ scale: 1.1 }}
+          className="share-btn text-pink-600"
+        >
+          <Copy className="w-4 h-4" /> Message
+        </motion.button>
       </div>
     </motion.div>
   );

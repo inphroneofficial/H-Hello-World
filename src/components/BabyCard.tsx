@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import html2canvas from "html2canvas";
 import {
@@ -7,177 +7,222 @@ import {
   MapPin,
   Calendar,
   Clock,
-  Scale,
   Users,
+  Sparkles,
+  Eye,
+  EyeOff,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import babyImage from "@/assets/baby-girl.png";
+
 import ShareButtons from "./ShareButtons";
 import PhotoGallery from "./PhotoGallery";
 import GuestBook from "./GuestBook";
 import DeveloperModal from "./DeveloperModal";
+import DeveloperButton from "./DeveloperButton";
+import ThemeToggle from "./ThemeToggle";
+import AudioPlayer from "./AudioPlayer";
 
 const BabyCard = () => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isDeveloperOpen, setIsDeveloperOpen] = useState(false);
 
-  /* 🔁 Image slideshow */
+  /* ✅ IMAGE SLIDESHOW (AS REQUESTED) */
   const images = ["/H-Hello World.png", babyImage];
   const [imageIndex, setImageIndex] = useState(0);
 
+  /* DETAILS VISIBILITY */
+  const [visibleDetails, setVisibleDetails] = useState<Record<string, boolean>>({
+    Gender: true,
+    "Birth Place": true,
+    Time: true,
+    Date: true,
+    Father: true,
+    Mother: true,
+  });
+
+  /* AUTO SLIDE */
   useEffect(() => {
     const interval = setInterval(() => {
       setImageIndex((prev) => (prev + 1) % images.length);
-    }, 6000);
+    }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
+
+  const toggleDetail = (label: string) => {
+    setVisibleDetails((prev) => ({ ...prev, [label]: !prev[label] }));
+  };
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
     setIsDownloading(true);
+
     const canvas = await html2canvas(cardRef.current, {
       scale: 2,
       backgroundColor: null,
       useCORS: true,
     });
+
     const link = document.createElement("a");
     link.download = "baby-announcement.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
+
     setIsDownloading(false);
   };
 
-const details = [
-  { icon: Heart, label: "Gender", value: "Baby Girl 👶🎀💖" },
-  { icon: MapPin, label: "Birth Place", value: "Nandyal Hospital 🏥" },
-  { icon: Clock, label: "Time", value: "3:51 PM ⏰" },
-  { icon: Calendar, label: "Date", value: "15-12-2025 " },
-  //{ icon: Scale, label: "Weight", value: "4.2 kg ⚖️" },
-];
-
+  const details = [
+    { icon: Heart, label: "Gender", value: "Baby Girl (Female)", color: "text-primary" },
+    { icon: MapPin, label: "Birth Place", value: "Nandyal Hospital" },
+    { icon: Clock, label: "Time", value: "3:51 PM" },
+    { icon: Calendar, label: "Date", value: "15-12-2025" },
+  ];
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-celebration flex flex-col items-center justify-center px-4 py-12"
+      className="min-h-screen bg-gradient-celebration dark:bg-gradient-cinematic flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden"
     >
-      {/* 3D Card */}
+      {/* TOP CONTROLS */}
+      <div className="fixed top-4 left-4 right-4 z-50 flex justify-between pointer-events-none">
+        <div className="pointer-events-auto">
+          <ThemeToggle />
+        </div>
+        <div className="pointer-events-auto">
+          <AudioPlayer />
+        </div>
+      </div>
+
+      {/* CARD */}
       <motion.div
         ref={cardRef}
-        initial={{ y: 60, opacity: 0, scale: 0.9 }}
-        animate={{ y: 0, opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        whileHover={{
-          rotateX: 6,
-          rotateY: -6,
-          scale: 1.02,
-        }}
-        style={{ transformStyle: "preserve-3d" }}
-        className="
-          relative w-full max-w-md
-          rounded-3xl
-          bg-card/90
-          backdrop-blur-xl
-          border border-border/30
-          shadow-[0_40px_120px_rgba(0,0,0,0.45)]
-          overflow-hidden
-        "
+        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.8 }}
+        className="relative w-full max-w-md md:max-w-2xl lg:max-w-4xl bg-card rounded-3xl shadow-elevated border border-border/30 overflow-hidden mt-16"
       >
-        {/* Gradient borders */}
         <div className="h-1.5 bg-gradient-to-r from-primary via-accent to-primary" />
 
-        <div className="p-6">
-  {/* Header */}
-<div className="text-center mb-4">
-  <p className="text-[10px] tracking-widest text-muted-foreground uppercase">
-    Welcome
-  </p>
+        {/* IMAGE SLIDESHOW */}
+        <div className="relative h-52 md:h-60 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={imageIndex}
+              src={images[imageIndex]}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.7 }}
+              className="w-full h-full object-cover"
+            />
+          </AnimatePresence>
 
-  <h1 className="mt-2 text-lg sm:text-xl font-display font-medium leading-relaxed">
-    ✨ Hello World, Baby Girl 👶🎀✨  
-    <span className="block text-sm sm:text-base text-muted-foreground mt-1">
-      A tiny miracle 💖, welcome to our world 🌍👧
-    </span>
-    <span className="block text-xs sm:text-sm text-muted-foreground mt-1">
-       A beautiful new part of our family 💗
-    </span>
-  </h1>
-</div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-card" />
 
+          {/* ARROWS */}
+          <button
+            onClick={() =>
+              setImageIndex((prev) => (prev - 1 + images.length) % images.length)
+            }
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/60 backdrop-blur flex items-center justify-center"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
 
-          {/* 🖼️ 3D Image Slideshow */}
-          <div className="flex justify-center mb-8">
-            <motion.div
-              className="
-                relative w-44 h-44
-                rounded-[28px]
-                overflow-hidden
-                bg-muted
-                border border-white/20
-                shadow-[0_25px_60px_rgba(0,0,0,0.5)]
-              "
-              animate={{
-                rotateY: [0, 4, 0],
-              }}
-              transition={{ duration: 7, repeat: Infinity }}
-            >
-              <motion.img
-                key={imageIndex}
-                src={images[imageIndex]}
-                initial={{ opacity: 0, scale: 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.8 }}
-                className="w-full h-full object-cover"
-              />
+          <button
+            onClick={() =>
+              setImageIndex((prev) => (prev + 1) % images.length)
+            }
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/60 backdrop-blur flex items-center justify-center"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
 
-              {/* Glass overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
-            </motion.div>
+        {/* CONTENT */}
+        <div className="p-6 md:p-8">
+          <div className="text-center mb-6">
+            <Sparkles className="mx-auto w-5 h-5 text-accent mb-2" />
+            <h1 className="text-2xl md:text-3xl font-display font-semibold">
+              ✨ Name Coming Soon ✨
+            </h1>
           </div>
 
-          {/* Details */}
-          <div className="space-y-3">
-            {details.map((d, i) => (
-              <motion.div
-                key={d.label}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + i * 0.1 }}
-                className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border/30"
+          {/* DETAILS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            {details.map((detail) => (
+              <div
+                key={detail.label}
+                className="flex items-center gap-3 p-4 rounded-xl bg-muted/50 border border-border/30 min-h-[72px]"
               >
-                <d.icon className="w-5 h-5 text-primary" />
-                <div>
-                  <p className="text-xs uppercase text-muted-foreground">
-                    {d.label}
-                  </p>
-                  <p className="font-medium">{d.value}</p>
+                <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
+                  <detail.icon className={`w-4 h-4 ${detail.color || "text-muted-foreground"}`} />
                 </div>
-              </motion.div>
+
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground uppercase">
+                    {detail.label}
+                  </p>
+                  <p className="text-sm font-medium">
+                    {visibleDetails[detail.label] ? detail.value : "••••••"}
+                  </p>
+                </div>
+
+                <button onClick={() => toggleDetail(detail.label)}>
+                  {visibleDetails[detail.label] ? (
+                    <Eye className="w-4 h-4" />
+                  ) : (
+                    <EyeOff className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             ))}
           </div>
 
-          {/* Parents */}
-          <div className="text-center mt-6 border-t border-border/50 pt-4">
-            <Users className="w-4 h-4 mx-auto text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">Proud Parents</p>
-            <p className="font-semibold">
-              Hussainaiah & Habeeb Hunnisa
-            </p>
+          {/* PARENTS */}
+          <div className="border-t pt-4 text-center">
+            <Users className="mx-auto w-4 h-4 mb-2 text-muted-foreground" />
+            <div className="flex justify-center gap-8">
+              {[
+                { label: "Father", value: "Hussainaiah" },
+                { label: "Mother", value: "Habeeb Hunnisa" },
+              ].map((p) => (
+                <div key={p.label} className="flex items-center gap-2">
+                  <div>
+                    <p className="text-xs text-muted-foreground">{p.label}</p>
+                    <p className="font-medium">
+                      {visibleDetails[p.label] ? p.value : "••••••••"}
+                    </p>
+                  </div>
+                  <button onClick={() => toggleDetail(p.label)}>
+                    {visibleDetails[p.label] ? (
+                      <Eye className="w-3 h-3" />
+                    ) : (
+                      <EyeOff className="w-3 h-3" />
+                    )}
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         <div className="h-1.5 bg-gradient-to-r from-primary via-accent to-primary" />
       </motion.div>
 
-      {/* Actions */}
-      <div className="mt-8 flex flex-col gap-4 items-center">
-        <Button onClick={handleDownload} disabled={isDownloading}>
-          <Download className="w-4 h-4 mr-2" />
-          Download Card
+      {/* ACTIONS */}
+      <div className="mt-8 flex flex-col items-center gap-4">
+        <Button onClick={handleDownload} disabled={isDownloading} className="px-8 py-6 rounded-full">
+          <Download className="w-5 h-5 mr-2" />
+          {isDownloading ? "Downloading..." : "Download Card"}
         </Button>
 
-        <ShareButtons cardRef={cardRef} />
+        <ShareButtons targetRef={cardRef} />
 
         <div className="flex gap-3">
           <PhotoGallery />
@@ -185,7 +230,18 @@ const details = [
         </div>
       </div>
 
-      <DeveloperModal />
+      <p className="mt-6 text-sm text-muted-foreground text-center">
+        A moment forever cherished. Welcome to the family, little one 💕
+      </p>
+
+      <div className="mt-6">
+        <DeveloperButton onOpenDeveloper={() => setIsDeveloperOpen(true)} />
+      </div>
+
+      <DeveloperModal
+        isOpen={isDeveloperOpen}
+        onClose={() => setIsDeveloperOpen(false)}
+      />
     </motion.div>
   );
 };

@@ -111,7 +111,7 @@ const CountdownExperience = ({ onComplete }: CountdownExperienceProps) => {
           Counting Down
         </h1>
         <p className="mt-4 text-lg font-elegant text-muted-foreground">
-          April - December 15, 2025 • 3:40 PM
+          December 15, 2025 • 3:40 PM
         </p>
       </motion.div>
 
