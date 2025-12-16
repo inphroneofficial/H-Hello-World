@@ -1,16 +1,36 @@
 import { motion } from "framer-motion";
 import { Heart, Sparkles, Star, Baby } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface HomeSectionProps {
   onContinue: () => void;
 }
 
 const HomeSection = ({ onContinue }: HomeSectionProps) => {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const quotes = [
     "A new star Queen is born ✨",
     "Love multiplied, blessings magnified 💕",
     "The tiniest feet make the biggest footprints in our hearts 👣",
   ];
+
+  // 🔥 Auto continue after 2 seconds
+  useEffect(() => {
+    timeoutRef.current = setTimeout(() => {
+      onContinue();
+    }, 5000);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [onContinue]);
+
+  // ❌ Cancel auto-continue if user clicks
+  const handleContinue = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    onContinue();
+  };
 
   return (
     <motion.div
@@ -78,7 +98,7 @@ const HomeSection = ({ onContinue }: HomeSectionProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="mb-6"
+          className="mb-4"
         >
           <span className="text-sm font-elegant tracking-[0.4em] text-muted-foreground uppercase">
             Welcome to a
@@ -100,11 +120,11 @@ const HomeSection = ({ onContinue }: HomeSectionProps) => {
           transition={{ delay: 1.1 }}
           className="text-lg md:text-xl font-elegant text-muted-foreground mb-10 leading-relaxed"
         >
-          Join us in celebrating the arrival of our precious little angel. 
-          A moment of pure joy and endless love awaits you.
+          Join us in celebrating the arrival of our precious little angel.
+          A moment of pure joy and endless love.
         </motion.p>
 
-        {/* Quotes carousel */}
+        {/* Quote card */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -116,23 +136,18 @@ const HomeSection = ({ onContinue }: HomeSectionProps) => {
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <motion.p
-              key={0}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-lg font-elegant italic text-foreground/80"
-            >
-              "{quotes[0]}"
-            </motion.p>
+            <p className="text-lg font-elegant italic text-foreground/80">
+              “{quotes[0]}”
+            </p>
           </motion.div>
         </motion.div>
 
-        {/* Continue button */}
+        {/* CTA Button */}
         <motion.button
+          onClick={handleContinue}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5 }}
-          onClick={onContinue}
           className="group relative px-10 py-4 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-display tracking-wider text-lg shadow-glow transition-all duration-300 hover:shadow-elevated hover:scale-105"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.98 }}
@@ -141,13 +156,23 @@ const HomeSection = ({ onContinue }: HomeSectionProps) => {
             className="absolute inset-0 rounded-full bg-gradient-to-r from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
           />
           <span className="relative flex items-center gap-2">
-            Begin the Journey
+            Celebrate This Joy ✨
             <Sparkles className="w-5 h-5" />
           </span>
         </motion.button>
+
+        {/* Auto-continue hint */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.6 }}
+          transition={{ delay: 1.7 }}
+          className="mt-4 text-xs text-muted-foreground"
+        >
+          Continuing automatically…
+        </motion.p>
       </motion.div>
 
-      {/* Bottom decorative elements */}
+      {/* Bottom dots */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -163,7 +188,7 @@ const HomeSection = ({ onContinue }: HomeSectionProps) => {
               opacity: [0.3, 0.6, 0.3],
             }}
             transition={{
-              duration: 1.5,
+              duration: 2.5,
               repeat: Infinity,
               delay: i * 0.2,
             }}
